@@ -5,11 +5,9 @@
 int cnt = 0;
 
 int main() {
-  // AsyncRedisClient clinet("127.0.0.1", 6379);
+  AsyncRedisClient client("127.0.0.1", 6379);
 
-  std::shared_ptr<AsyncRedisClient> clinet =
-      std::make_shared<AsyncRedisClient>("127.0.0.1", 6379);
-  if (!clinet->Initialize()) {
+  if (!client->Initialize()) {
     std::cout << "init client error \n";
     exit(0);
   }
@@ -19,11 +17,11 @@ int main() {
   gettimeofday(&start, nullptr);
   for (int i = 0; i < BATCH; i++) {
     auto f =
-        clinet->SendCommand<CMD::kSET>(std::to_string(i),
+        client->SendCommand<CMD::kSET>(std::to_string(i),
         std::string("value"));
   }
 
-  clinet->Stop();
+  client->Stop();
   gettimeofday(&end, nullptr);
   double elpased = ((end.tv_sec - start.tv_sec) * 1000 +
                     (end.tv_usec - start.tv_usec) / 1000);
